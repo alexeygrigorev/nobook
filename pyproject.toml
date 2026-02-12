@@ -1,0 +1,58 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nobook"
+description = "Plain .py files as notebooks"
+readme = "README.md"
+license = {text = "WTFPL"}
+requires-python = ">=3.10"
+dynamic = ["version"]
+
+dependencies = []
+
+authors = [
+    {name = "Alexey"}
+]
+
+keywords = ["jupyter", "notebook", "python"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+[project.optional-dependencies]
+jupyter = ["jupyter-server>=2", "notebook>=7"]
+
+[project.scripts]
+nobook = "nobook.cli:main"
+
+[project.entry-points."jupyter_server.serverextension"]
+nobook = "nobook.jupyter.serverextension"
+
+[dependency-groups]
+dev = [
+    "hatch",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["nobook"]
+
+[tool.hatch.version]
+path = "nobook/__version__.py"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
