@@ -45,17 +45,33 @@ def cmd_list(args: argparse.Namespace) -> None:
         print(block.name)
 
 
-def cmd_jupyter(args: argparse.Namespace) -> None:
+def _launch_jupyter(module: str, extra_args: list[str]) -> None:
     jupyter_args = [
-        sys.executable, "-m", "notebook",
-        f"--ServerApp.contents_manager_class=nobook.jupyter.contentsmanager.NobookContentsManager",
-        *args.jupyter_args,
+        sys.executable, "-m", module,
+        "--ServerApp.contents_manager_class=nobook.jupyter.contentsmanager.NobookContentsManager",
+        *extra_args,
     ]
-    sys.exit(subprocess.call(jupyter_args))
+    try:
+        sys.exit(subprocess.call(jupyter_args))
+    except KeyboardInterrupt:
+        sys.exit(0)
+
+
+def cmd_default(args: argparse.Namespace) -> None:
+    _launch_jupyter("notebook", args.jupyter_args)
+
+
+def cmd_lab(args: argparse.Namespace) -> None:
+    _launch_jupyter("jupyterlab", args.jupyter_args)
+
+
+def cmd_jupyter(args: argparse.Namespace) -> None:
+    _launch_jupyter("notebook", args.jupyter_args)
 
 
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="nobook", description="Plain .py files as notebooks")
+    parser.add_argument("jupyter_args", nargs="*", help="Extra args for notebook")
     sub = parser.add_subparsers(dest="command")
 
     # run
@@ -67,13 +83,17 @@ def main(argv: list[str] | None = None) -> None:
     list_parser = sub.add_parser("list", help="List block names")
     list_parser.add_argument("file", help="Path to .py file")
 
-    # jupyter
+    # lab
+    lab_parser = sub.add_parser("lab", help="Launch JupyterLab with nobook")
+    lab_parser.add_argument("jupyter_args", nargs="*", help="Extra args for jupyterlab")
+
+    # jupyter (kept for backwards compat)
     jupyter_parser = sub.add_parser("jupyter", help="Launch Jupyter Notebook with nobook")
     jupyter_parser.add_argument("jupyter_args", nargs="*", help="Extra args for notebook")
 
     args = parser.parse_args(argv)
     if args.command is None:
-        parser.print_help()
-        sys.exit(1)
+        cmd_default(args)
+        return
 
-    {"run": cmd_run, "list": cmd_list, "jupyter": cmd_jupyter}[args.command](args)
+    {"run": cmd_run, "list": cmd_list, "lab": cmd_lab, "jupyter": cmd_jupyter}[args.command](args)

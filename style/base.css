@@ -1,0 +1,38 @@
+/* Ensure the cell is a positioning context with visible overflow */
+.jp-Cell:has(.nobook-block-label) {
+  position: relative;
+  overflow: visible;
+  margin-top: 20px;
+}
+
+.nobook-block-label {
+  position: absolute;
+  top: -16px;
+  left: 80px;
+  line-height: 1;
+  z-index: 1;
+}
+
+.nobook-block-input {
+  font-family: var(--jp-code-font-family, monospace);
+  font-size: 9px;
+  color: var(--jp-ui-font-color3, #666);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  padding: 0 3px;
+  outline: none;
+  min-width: 40px;
+  opacity: 0.6;
+}
+
+.nobook-block-input:hover {
+  opacity: 1;
+  border-color: var(--jp-border-color2, #555);
+}
+
+.nobook-block-input:focus {
+  opacity: 1;
+  border-color: var(--jp-brand-color1, #2196f3);
+  color: var(--jp-ui-font-color1, #ccc);
+}

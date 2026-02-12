@@ -2,7 +2,7 @@
 
 Plain `.py` files as notebooks. No `.ipynb` files ever.
 
-Write Python with `# @block=name` markers. Each block becomes a Jupyter cell. The `.py` file **is** the notebook.
+Write Python with `# @block=name` markers. Each block becomes a Jupyter cell. The `.py` file is the notebook.
 
 ## File format
 
@@ -20,13 +20,61 @@ A block starts at `# @block=name` and runs until the next `# @block=` or end of 
 
 ## Quick start
 
-### CLI (no Jupyter needed)
+```bash
+# 1. Create a .py file with block markers
+cat > demo.py << 'EOF'
+# @block=hello
+print("hello from nobook")
 
+# @block=math
+import math
+print(f"pi = {math.pi:.4f}")
+EOF
+
+# 2. Launch Jupyter (no install needed)
+uvx nobook
 ```
-uv add -e path/to/nobook
-uv run nobook run example.py        # executes all blocks, writes example.out.py
-uv run nobook run example.py --block=setup   # runs up to and including "setup"
-uv run nobook list example.py       # prints block names
+
+Jupyter opens. Right-click `demo.py` in the file browser and select Open as Nobook. It renders as a notebook with two cells (`hello` and `math`). Run them, edit them, save -- the file stays `.py`.
+
+### As a project dependency
+
+```bash
+uv add nobook
+uv run nobook
+```
+
+## Opening .py files as notebooks
+
+In JupyterLab / Jupyter Notebook, right-click any `.py` file and select Open as Nobook:
+
+![Right-click a .py file and select "Open as Nobook"](docs/open-as-nobook.png)
+
+`.py` files containing `# @block=` markers will also auto-open as notebooks when double-clicked.
+
+## CLI commands
+
+### Launch Jupyter
+
+```bash
+uv run nobook           # launches Jupyter Notebook (default)
+uv run nobook lab       # launches JupyterLab
+uv run nobook jupyter   # same as default, launches Jupyter Notebook
+```
+
+All launch commands accept extra arguments that are passed through to Jupyter:
+
+```bash
+uv run nobook --port=9999 --no-browser
+uv run nobook lab --port=9999
+```
+
+### Run blocks without Jupyter
+
+```bash
+uv run nobook run example.py                 # execute all blocks, write example.out.py
+uv run nobook run example.py --block=setup   # run up to and including "setup"
+uv run nobook list example.py                # print block names
 ```
 
 Output goes to `.out.py` with results inlined as comments:
@@ -43,54 +91,21 @@ print(f"sqrt({x}) = {result:.4f}")
 # >>> sqrt(42) = 6.4807
 ```
 
-Errors show as `# !!! ...` lines.
+Errors show as `# !!! ...` lines. Since output and errors are plain comments, `.out.py` files are valid Python -- you can run them directly with `python example.out.py`.
 
-### Jupyter
+See `examples/` for sample input and output files.
 
-Install with the jupyter extra:
-
-```
-uv add -e "path/to/nobook[jupyter]"
-```
-
-Then launch Jupyter with the nobook ContentsManager:
-
-```
-uv run nobook jupyter
-```
-
-This runs `jupyter notebook` with the right `--ContentsManager` flag. Navigate to any `.py` file containing `# @block=` markers and it opens as a notebook. Run cells, edit, save -- it writes back to the same `.py` file.
-
-#### Manual launch (without the CLI wrapper)
-
-```
-uv run jupyter notebook --ContentsManager.default_cm_class=nobook.jupyter.contentsmanager.NobookContentsManager
-```
-
-## Minimal reproducible example
+## Manual launch (without the CLI wrapper)
 
 ```bash
-# 1. Start a new project
-uv init myproject && cd myproject
-
-# 2. Add nobook with jupyter support
-uv add -e "path/to/nobook[jupyter]"
-
-# 3. Create a nobook file
-cat > demo.py << 'EOF'
-# @block=hello
-print("hello from nobook")
-
-# @block=math
-import math
-print(f"pi = {math.pi:.4f}")
-EOF
-
-# 4. Launch
-uv run nobook jupyter
+uv run jupyter notebook --ServerApp.contents_manager_class=nobook.jupyter.contentsmanager.NobookContentsManager
 ```
 
-Jupyter opens. Click `demo.py` in the file browser. It renders as a notebook with two cells (`hello` and `math`). Run them, edit them, save -- the file stays `.py`.
+Or for JupyterLab:
+
+```bash
+uv run jupyter lab --ServerApp.contents_manager_class=nobook.jupyter.contentsmanager.NobookContentsManager
+```
 
 ## How it works
 
@@ -107,3 +122,30 @@ NobookContentsManager          <-- intercepts file I/O
 The `NobookContentsManager` subclasses Jupyter's `LargeFileManager`. On `get()`, it parses `# @block=` markers and returns a notebook model (blocks as code cells). On `save()`, it converts the notebook model back to `.py` format. The kernel and UI are completely stock.
 
 `.py` files without `# @block=` markers are served normally (as plain text files).
+
+## JupyterLab extension
+
+Nobook includes a JupyterLab extension that adds:
+
+- Launcher card -- click "Nobook" in the launcher to create a new `.py` notebook
+- "Open as Nobook" context menu -- right-click any `.py` file to open it as a notebook
+- Block name labels -- editable labels on each cell showing the `@block` name
+
+The extension is bundled with the package and installs automatically.
+
+## Development
+
+To test nobook from any project without installing it:
+
+```bash
+uv run --project <path-to-nobook> python -m nobook
+```
+
+### Full development install
+
+```bash
+git clone <repo-url> && cd nobook
+uv sync
+jlpm install && jlpm build
+uv run jupyter labextension develop . --overwrite
+```

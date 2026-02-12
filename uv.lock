@@ -1495,6 +1495,7 @@ name = "nobook"
 source = { editable = "." }
 dependencies = [
     { name = "jupyter-server" },
+    { name = "jupyterlab" },
     { name = "notebook" },
 ]
 
@@ -1509,6 +1510,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "jupyter-server", specifier = ">=2" },
+    { name = "jupyterlab", specifier = ">=4" },
     { name = "notebook", specifier = ">=7" },
 ]
 
