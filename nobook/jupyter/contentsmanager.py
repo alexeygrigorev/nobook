@@ -30,9 +30,10 @@ def _py_to_notebook(text: str) -> nbformat.NotebookNode:
         cell.metadata["nobook"] = {"preamble": True}
         nb.cells.append(cell)
 
-    # Each block becomes a code cell
+    # Each block becomes a code cell, with cell id = block name
     for block in parsed.blocks:
         cell = nbformat.v4.new_code_cell(source="\n".join(block.lines))
+        cell.id = block.name
         cell.metadata["nobook"] = {"block": block.name}
         nb.cells.append(cell)
 

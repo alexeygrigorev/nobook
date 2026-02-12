@@ -1,0 +1,37 @@
+{
+  "name": "nobook-labextension",
+  "version": "0.0.1",
+  "description": "Nobook launcher card for JupyterLab",
+  "license": "WTFPL",
+  "author": "Alexey",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**/*.{d.ts,js,js.map}",
+    "style/**/*.{css,js}",
+    "install.json"
+  ],
+  "scripts": {
+    "build": "jlpm run build:lib && jlpm run build:labextension",
+    "build:lib": "tsc",
+    "build:labextension": "jupyter labextension build .",
+    "build:prod": "jlpm run build:lib && jlpm run build:labextension",
+    "clean": "rimraf lib nobook/labextension tsconfig.tsbuildinfo",
+    "watch": "tsc -w"
+  },
+  "dependencies": {
+    "@jupyterlab/application": "^4.0.0",
+    "@jupyterlab/filebrowser": "^4.0.0",
+    "@jupyterlab/launcher": "^4.0.0",
+    "@jupyterlab/ui-components": "^4.0.0"
+  },
+  "devDependencies": {
+    "@jupyterlab/builder": "^4.0.0",
+    "rimraf": "^5.0.0",
+    "typescript": "~5.2.0"
+  },
+  "jupyterlab": {
+    "extension": true,
+    "outputDir": "nobook/labextension"
+  }
+}

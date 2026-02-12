@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-jupyter-builder>=0.5", "jupyterlab>=4"]
 build-backend = "hatchling.build"
 
 [project]
@@ -10,7 +10,7 @@ license = {text = "WTFPL"}
 requires-python = ">=3.10"
 dynamic = ["version"]
 
-dependencies = []
+dependencies = ["jupyter-server>=2", "notebook>=7"]
 
 authors = [
     {name = "Alexey"}
@@ -26,9 +26,6 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-
-[project.optional-dependencies]
-jupyter = ["jupyter-server>=2", "notebook>=7"]
 
 [project.scripts]
 nobook = "nobook.cli:main"
@@ -46,6 +43,20 @@ dev = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["nobook"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"nobook/labextension" = "share/jupyter/labextensions/nobook-labextension"
+"install.json" = "share/jupyter/labextensions/nobook-labextension/install.json"
+
+[tool.hatch.build.hooks.jupyter-builder]
+dependencies = ["hatch-jupyter-builder>=0.5"]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = ["nobook/labextension/package.json"]
+skip-if-exists = ["nobook/labextension/package.json"]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+npm = ["jlpm"]
+build_cmd = "build:prod"
 
 [tool.hatch.version]
 path = "nobook/__version__.py"

@@ -1,0 +1,5 @@
+{
+  "packageManager": "python",
+  "packageName": "nobook",
+  "uninstallInstructions": "Use pip or uv to uninstall:\n\n  pip uninstall nobook"
+}

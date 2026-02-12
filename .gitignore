@@ -27,3 +27,9 @@ htmlcov/
 *.wav
 .ipynb_checkpoints/
 *.out.py
+node_modules/
+nobook/labextension/
+tsconfig.tsbuildinfo
+.yarn/
+.pnp.*
+yarn.lock
