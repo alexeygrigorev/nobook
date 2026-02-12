@@ -22,7 +22,10 @@ jobs:
         run: uv python install ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: uv sync --python ${{ matrix.python-version }}
+        run: |
+          mkdir -p nobook/labextension
+          echo '{"name": "nobook-labextension"}' > nobook/labextension/package.json
+          uv sync --python ${{ matrix.python-version }}
 
       - name: Run tests
         run: uv run pytest -v
