@@ -20,6 +20,8 @@ A block starts at `# @block=name` and runs until the next `# @block=` or end of 
 
 ## Quick start
 
+### JupyterLab / Jupyter Notebook
+
 ```bash
 # 1. Create a .py file with block markers
 cat > demo.py << 'EOF'
@@ -36,6 +38,15 @@ uvx nobook
 ```
 
 Jupyter opens. Right-click `demo.py` in the file browser and select Open as Nobook. It renders as a notebook with two cells (`hello` and `math`). Run them, edit them, save -- the file stays `.py`.
+
+### VS Code
+
+Install the [Nobook VS Code extension](https://marketplace.visualstudio.com/items?itemName=nobook.nobook-vscode) (coming soon).
+
+Then:
+1. Open any `.py` file with `# @block=` markers
+2. Right-click and select "Open as Nobook"
+3. Or use the command palette: "Nobook: Create New Notebook"
 
 ### As a project dependency
 
@@ -133,6 +144,17 @@ Nobook includes a JupyterLab extension that adds:
 
 The extension is bundled with the package and installs automatically.
 
+## VS Code extension
+
+The VS Code extension provides:
+
+- Open `.py` files with `# @block=` markers as notebooks
+- Block name display on each cell
+- "Open as Nobook" context menu
+- "Create New Notebook" command
+
+Install from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=nobook.nobook-vscode) (coming soon).
+
 ## Development
 
 To test nobook from any project without installing it:
@@ -146,6 +168,34 @@ uv run --project <path-to-nobook> python -m nobook
 ```bash
 git clone <repo-url> && cd nobook
 uv sync
-jlpm install && jlpm build
-uv run jupyter labextension develop . --overwrite
+make setup-all      # Set up both JupyterLab and VS Code extensions
+make build-all      # Build both extensions
+```
+
+### JupyterLab extension development
+
+```bash
+cd jupyterlab-ext
+jlpm install
+jlpm run watch
+```
+
+### VS Code extension development
+
+```bash
+cd vscode-ext
+npm install
+npm run watch
+# Press F5 in VS Code to launch Extension Development Host
+```
+
+### Project structure
+
+```
+nobook/
+├── nobook/              # Python package
+├── jupyterlab-ext/      # JupyterLab extension (TypeScript)
+├── vscode-ext/          # VS Code extension (TypeScript)
+├── tests/               # Python tests
+└── examples/            # Example notebooks
 ```

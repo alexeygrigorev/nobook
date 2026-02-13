@@ -27,9 +27,22 @@ htmlcov/
 *.wav
 .ipynb_checkpoints/
 *.out.py
+# JupyterLab extension
+jupyterlab-ext/node_modules/
+jupyterlab-ext/nobook/labextension/
+jupyterlab-ext/tsconfig.tsbuildinfo
+jupyterlab-ext/.yarn/
+jupyterlab-ext/.pnp.*
+jupyterlab-ext/yarn.lock
+jupyterlab-ext/.yarn/cache/
+
+# VS Code extension
+vscode-ext/node_modules/
+vscode-ext/out/
+vscode-ext/*.vsix
+
+# General (root level)
 node_modules/
-nobook/labextension/
-tsconfig.tsbuildinfo
 .yarn/
 .pnp.*
 yarn.lock

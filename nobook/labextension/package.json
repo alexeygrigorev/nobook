@@ -17,7 +17,7 @@
     "build:lib": "tsc",
     "build:labextension": "jupyter labextension build .",
     "build:prod": "jlpm run build:lib && jlpm run build:labextension",
-    "clean": "rimraf lib nobook/labextension tsconfig.tsbuildinfo",
+    "clean": "rimraf lib ../nobook/labextension tsconfig.tsbuildinfo",
     "watch": "tsc -w"
   },
   "dependencies": {
@@ -35,6 +35,11 @@
   },
   "jupyterlab": {
     "extension": true,
-    "outputDir": "nobook/labextension"
+    "outputDir": "../nobook/labextension",
+    "_build": {
+      "load": "static\\remoteEntry.51fd2c673171b01bb07e.js",
+      "extension": "./extension",
+      "style": "./style"
+    }
   }
 }

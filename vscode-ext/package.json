@@ -1,0 +1,91 @@
+{
+  "name": "nobook-vscode",
+  "displayName": "Nobook",
+  "description": "Plain .py files as notebooks - Write Python with # @block= markers",
+  "version": "0.0.1",
+  "publisher": "nobook",
+  "license": "WTFPL",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Notebooks",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "jupyter",
+    "notebook",
+    "python",
+    "nobook"
+  ],
+  "activationEvents": [
+    "onNotebook:nobook-notebook"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "notebooks": [
+      {
+        "type": "nobook-notebook",
+        "displayName": "Nobook",
+        "selector": [
+          {
+            "filenamePattern": "*.py"
+          }
+        ],
+        "priority": "option"
+      }
+    ],
+    "commands": [
+      {
+        "command": "nobook.openAsNobook",
+        "title": "Open as Nobook",
+        "icon": "$(notebook)"
+      },
+      {
+        "command": "nobook.createNew",
+        "title": "Nobook: Create New Notebook",
+        "icon": "$(add)"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "nobook.openAsNobook",
+          "when": "resourceExtname == .py",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "nobook.createNew"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Nobook",
+      "properties": {
+        "nobook.autoDetect": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically open .py files with # @block= markers as Nobook notebooks"
+        },
+        "nobook.defaultBlockName": {
+          "type": "string",
+          "default": "cell",
+          "description": "Default prefix for unnamed blocks"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -watch",
+    "pretest": "npm run build",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.90.0",
+    "typescript": "^5.4.0"
+  }
+}

@@ -45,18 +45,19 @@ dev = [
 packages = ["nobook"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"nobook/labextension" = "share/jupyter/labextensions/nobook-labextension"
-"install.json" = "share/jupyter/labextensions/nobook-labextension/install.json"
+"jupyterlab-ext/nobook/labextension" = "share/jupyter/labextensions/nobook-labextension"
+"jupyterlab-ext/install.json" = "share/jupyter/labextensions/nobook-labextension/install.json"
 
 [tool.hatch.build.hooks.jupyter-builder]
 dependencies = ["hatch-jupyter-builder>=0.5"]
 build-function = "hatch_jupyter_builder.npm_builder"
-ensured-targets = ["nobook/labextension/package.json"]
-skip-if-exists = ["nobook/labextension/package.json"]
+ensured-targets = ["jupyterlab-ext/nobook/labextension/package.json"]
+skip-if-exists = ["jupyterlab-ext/nobook/labextension/package.json"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 npm = ["jlpm"]
 build_cmd = "build:prod"
+cwd = "jupyterlab-ext"
 
 [tool.hatch.version]
 path = "nobook/__version__.py"
