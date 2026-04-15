@@ -1,7 +1,5 @@
 """Write execution results back to .out.py files."""
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from .executor import BlockResult

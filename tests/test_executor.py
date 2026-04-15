@@ -67,3 +67,18 @@ def test_execute_specific_blocks():
     assert len(results) == 2
     assert results[0].name == "setup"
     assert results[1].name == "show"
+
+
+def test_preamble_runs_before_blocks():
+    text = "x = 40\n# @block=show\nprint(x + 2)\n"
+    parsed = parse_string(text)
+    results = execute_all(parsed)
+    assert results[0].stdout == "42\n"
+    assert results[0].error is None
+
+
+def test_final_expression_uses_notebook_display_semantics():
+    text = "# @block=show\nvalue = {'a', 'b'}\nsorted(value)\n"
+    parsed = parse_string(text)
+    results = execute_all(parsed)
+    assert results[0].stdout == "['a', 'b']\n"

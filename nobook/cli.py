@@ -1,7 +1,5 @@
 """CLI entry point for nobook."""
 
-from __future__ import annotations
-
 import argparse
 import subprocess
 import sys
@@ -69,9 +67,8 @@ def cmd_jupyter(args: argparse.Namespace) -> None:
     _launch_jupyter("notebook", args.jupyter_args)
 
 
-def main(argv: list[str] | None = None) -> None:
+def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="nobook", description="Plain .py files as notebooks")
-    parser.add_argument("jupyter_args", nargs="*", help="Extra args for notebook")
     sub = parser.add_subparsers(dest="command")
 
     # run
@@ -91,9 +88,21 @@ def main(argv: list[str] | None = None) -> None:
     jupyter_parser = sub.add_parser("jupyter", help="Launch Jupyter Notebook with nobook")
     jupyter_parser.add_argument("jupyter_args", nargs="*", help="Extra args for notebook")
 
+    return parser
+
+
+def main(argv: list[str] | None = None) -> None:
+    argv = sys.argv[1:] if argv is None else argv
+    parser = _build_parser()
+    commands = {"run", "list", "lab", "jupyter"}
+
+    if not argv or argv[0] not in commands | {"-h", "--help"}:
+        cmd_default(argparse.Namespace(jupyter_args=argv))
+        return
+
     args = parser.parse_args(argv)
     if args.command is None:
-        cmd_default(args)
+        parser.print_help()
         return
 
     {"run": cmd_run, "list": cmd_list, "lab": cmd_lab, "jupyter": cmd_jupyter}[args.command](args)

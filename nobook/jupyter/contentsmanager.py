@@ -1,7 +1,5 @@
 """Custom ContentsManager that presents .py files with @block markers as notebooks."""
 
-from __future__ import annotations
-
 import nbformat
 from jupyter_server.services.contents.largefilemanager import LargeFileManager
 

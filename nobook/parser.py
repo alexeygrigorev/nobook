@@ -5,8 +5,6 @@ the next `# @block=...` line or end of file. No `# @end` needed.
 Lines before the first block are the preamble (preserved but not executed).
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass, field
 from pathlib import Path
 
